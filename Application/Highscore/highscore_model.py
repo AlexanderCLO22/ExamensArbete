@@ -1,1 +1,3 @@
-Class HighScore:
+class HighScore:
+    score: int
+    user: str
