@@ -8,8 +8,13 @@ class MongoDBRepository:
         self.collection_users = self.db['Users']
         self.collection_highscores = self.db['Highscores']
     
-    def create_user(self, username, password, email):
-        user = User(username=username, password=password, email=email)
-        self.collection_users.insert_one(user.__dict__)
+    def create_user(self, username, password):
+        user = User(username=username, password=password)
+        self.collection_users.insert_one(user)
 
-    
+    def find_user(self, username):
+        user_data = self.collection_users.find_one({"username": username})
+        if user_data:
+            return User(user_data)
+        else:
+            return None

@@ -3,8 +3,11 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-    <h2>Welcome to the Home Page!</h2>
-    <p>This is the home page content.</p>
+    {% if current_user.is_authenticated %}
+    <h2>Hello, {{ current_user.id }}!</h2>
+    {% else %}
+    <h2>Hello, stranger!</h2>
+    {% endif %}
 {% endblock %}
 
 
