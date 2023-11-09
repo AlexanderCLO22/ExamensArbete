@@ -6,7 +6,11 @@ homeviews = Blueprint('homeviews', __name__)
 @homeviews.route('/', methods=['GET', 'POST'])
 def home():
     
-    current_app.mongodb_repository.create_user(username="john_doe", password="password123", email="john@example.com")
+    #current_app.mongodb_repository.create_user(username="john_doe", password="password123", email="john@example.com")
 
     return render_template("home.html")
+
+@homeviews.route('/signup', methods=['GET', 'POST'])
+def signup():
+    return render_template("sign_up.html")
 

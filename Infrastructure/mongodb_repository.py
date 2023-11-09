@@ -12,5 +12,4 @@ class MongoDBRepository:
         user = User(username=username, password=password, email=email)
         self.collection_users.insert_one(user.__dict__)
 
-    #def create_user(self, user: User):
-    #    self.collection_users.insert_one(user.__dict__)
+    
