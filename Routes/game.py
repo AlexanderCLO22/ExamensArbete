@@ -23,15 +23,15 @@ def start():
     }
     return jsonify(initial_data)    
 
-@gameviews.route('/move', methods=['GET', 'POST'])
-def move():
-    global direction
-    data = request.get_json()
-    direction = data.get('direction', '')
-    snake_game.move_snake()
+# @gameviews.route('/move', methods=['GET', 'POST'])
+# def move():
+#     global direction
+#     data = request.get_json()
+#     direction = data.get('direction', '')
+#     snake_game.move_snake(direction)
 
-    updated_data = {
-        'snake': snake_game.snake,
-        'food': snake_game.food
-    }
-    return jsonify(updated_data)
+#     updated_data = {
+#         'snake': snake_game.snake,
+#         'food': snake_game.food
+#     }
+#     return jsonify(updated_data)

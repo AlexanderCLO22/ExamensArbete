@@ -72,16 +72,25 @@ function moveSnake() {
         snake.unshift(head);  // Add the new head to the front
     }
 }
-const moveInterval = 100;  // Adjust the speed of the game
+const moveInterval = 70;  // Adjust the speed of the game
+let lastMoveTime = 0;
 let gameRunning = true;
-function gameLoop() {
+
+
+function gameLoop(currentTime) {
     if (!gameRunning) {
         return;
     }
+
+    const deltaTime = currentTime - lastMoveTime;
+
+    if (deltaTime > moveInterval) {
     moveSnake();
     updateCanvas();
-    requestAnimationFrame(gameLoop);
-    setTimeout(gameLoop, moveInterval);
+    lastMoveTime = currentTime;
+}
+requestAnimationFrame(gameLoop);
+
 }
 
 // Start the game
