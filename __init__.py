@@ -9,8 +9,10 @@ def create_app():
     
     from Routes.home import homeviews
     from Routes.auth import authviews
+    from Routes.game import gameviews
     app.register_blueprint(homeviews, url_prefix='/')
     app.register_blueprint(authviews, url_prefix='/')
+    app.register_blueprint(gameviews, url_prefix='/')
 
     mongodb_repository = MongoDBRepository()
     app.mongodb_repository = mongodb_repository

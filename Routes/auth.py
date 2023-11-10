@@ -15,7 +15,7 @@ def login():
         
         if  user:
             if  check_password_hash(user.password, password):
-                login_user(user)
+                login_user(user, remember=True)
                 return redirect(url_for('homeviews.home'))
         else:
             flash("Wrong username or password")
