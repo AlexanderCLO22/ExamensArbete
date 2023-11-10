@@ -2,37 +2,66 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const segmentSize = 20;  // Adjust the segment size based on your game
 
-let snake = [];
-let food = {};
+let snake;
+let food;
 let direction = '';
 
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'ArrowUp' && direction !== 'DOWN') {
-        direction = 'UP';
-    } else if (event.key === 'ArrowDown' && direction !== 'UP') {
-        direction = 'DOWN';
-    } else if (event.key === 'ArrowLeft' && direction !== 'RIGHT') {
-        direction = 'LEFT';
-    } else if (event.key === 'ArrowRight' && direction !== 'LEFT') {
-        direction = 'RIGHT';
+    if (event.key.startsWith('Arrow')) {
+        const newDirection = event.key.replace('Arrow', '');
+        sendMoveRequest(newDirection);
     }
 });
 
-function initializeGame() {
-    snake = [{ x: 2, y: 2 }];  // Initial position of the snake
-    food = generateFood();
-    direction = 'RIGHT';
+function initializeGame(gridSize) {
+    fetch('/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            gridSize: gridSize
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        snake = data.snake;
+        food = data.food;
+        direction = 'RIGHT';
+        gameLoop();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
-function generateFood() {
-    return {
-        x: Math.floor(Math.random() * (canvas.width / segmentSize)),
-        y: Math.floor(Math.random() * (canvas.height / segmentSize))
-    };
+function startGame() {
+    const gridSize = 20;  // Set your desired grid size
+    initializeGame(gridSize);
+}
+
+
+function sendMoveRequest(newDirection) {
+    fetch('/move', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            direction: newDirection
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        snake = data.snake;
+        food = data.food;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 function updateCanvas() {
-    // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the snake
@@ -46,56 +75,17 @@ function updateCanvas() {
     ctx.fillRect(food.x * segmentSize, food.y * segmentSize, segmentSize, segmentSize);
 }
 
-function moveSnake() {
-    const head = Object.assign({}, snake[0]);  // Create a copy of the head
-    switch (direction) {
-        case 'UP':
-            head.y -= 1;
-            break;
-        case 'DOWN':
-            head.y += 1;
-            break;
-        case 'LEFT':
-            head.x -= 1;
-            break;
-        case 'RIGHT':
-            head.x += 1;
-            break;
-    }
-
-    // Check for collisions with the food
-    if (head.x === food.x && head.y === food.y) {
-        snake.unshift(food);  // Add the food to the front of the snake
-        food = generateFood();  // Generate new food
-    } else {
-        snake.pop();  // Remove the last segment of the snake
-        snake.unshift(head);  // Add the new head to the front
-    }
-}
-const moveInterval = 70;  // Adjust the speed of the game
-let lastMoveTime = 0;
-let gameRunning = true;
-
-
-function gameLoop(currentTime) {
-    if (!gameRunning) {
-        return;
-    }
-
-    const deltaTime = currentTime - lastMoveTime;
-
-    if (deltaTime > moveInterval) {
-    moveSnake();
+function gameLoop() {
     updateCanvas();
-    lastMoveTime = currentTime;
-}
-requestAnimationFrame(gameLoop);
-
+    requestAnimationFrame(gameLoop);
 }
 
-// Start the game
-initializeGame();
-gameLoop();
+
+document.addEventListener('DOMContentLoaded', function() {
+    const gridSize = 20;  // Set your desired grid size
+    initializeGame(gridSize);
+});
+
 
 // Add an event listener to start a new game
 document.addEventListener('keydown', function(event) {

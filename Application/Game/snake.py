@@ -20,6 +20,7 @@ class SnakeGame:
             new_head = (head_x - 1, head_y)
         elif direction == 'RIGHT':
             new_head = (head_x + 1, head_y)
+            
         self.snake.insert(0, new_head)
 
         if new_head == self.food:

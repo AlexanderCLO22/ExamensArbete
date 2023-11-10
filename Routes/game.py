@@ -11,27 +11,29 @@ snake_game = snake.SnakeGame()
 def game():
     return render_template("game.html", user=current_user)
 
-@gameviews.route('/start', methods=['GET', 'POST'])
+@gameviews.route('/start', methods=['POST'])
 @login_required
 def start():
-    
-    snake_game.start_game(20)
+    print(request.headers)
+    data = request.json
+    print(data)
+    grid_size = request.get_json().get('gridSize', 1)
+    snake_game.start_game(grid_size)
     
     initial_data = {
         'snake': snake_game.snake,
         'food': snake_game.food,
     }
-    return jsonify(initial_data)    
+    return jsonify(initial_data)
 
-# @gameviews.route('/move', methods=['GET', 'POST'])
-# def move():
-#     global direction
-#     data = request.get_json()
-#     direction = data.get('direction', '')
-#     snake_game.move_snake(direction)
-
-#     updated_data = {
-#         'snake': snake_game.snake,
-#         'food': snake_game.food
-#     }
-#     return jsonify(updated_data)
+@gameviews.route('/move', methods=['POST'])
+@login_required
+def move():
+    direction = request.get_json().get('direction', '')
+    snake_game.move_snake(direction)
+    
+    game_data = {
+        'snake': snake_game.snake,
+        'food': snake_game.food,
+    }
+    return jsonify(game_data)
