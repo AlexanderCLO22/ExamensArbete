@@ -1,29 +1,21 @@
 $(document).ready(function () {
     var gameInterval; // Variable to store the interval ID
     var snakeImg = new Image();
-    var foodImages = [
-        '/static/images/apple.webp',
-        '/static/images/banana.webp',
-        '/static/images/cherry.webp'
-    ];
+    var foodImages = {
+        apple: '/static/images/apple.webp',
+        banana: '/static/images/banana.webp',
+        cherry: '/static/images/cherry.webp'
+    };
 
     // Preload snake image
     snakeImg.src = '/static/images/snakehead2.png';
 
     // Preload food images
-    var foodImgs = [];
-    for (var i = 0; i < foodImages.length; i++) {
+    var foodImgs = {};
+    for (var fruit in foodImages) {
         var img = new Image();
-        img.src = foodImages[i];
-        foodImgs.push(img);
-    }
-
-    var currentFoodImageIndex = 0; // Index to keep track of the current food image
-
-    // Function to load the next food image
-    function loadNextFoodImage() {
-        currentFoodImageIndex = (currentFoodImageIndex + 1) % foodImgs.length;
-        initializeGame(); // Start the game after loading the next food image
+        img.src = foodImages[fruit];
+        foodImgs[fruit] = img;
     }
 
     // Function to initialize the game
@@ -60,8 +52,9 @@ $(document).ready(function () {
                     ctx.drawImage(snakeImg, snakeX, snakeY, cellSize, cellSize);
                 }
 
-                // Draw the food using the preloaded image
-                ctx.drawImage(foodImgs[currentFoodImageIndex], foodX, foodY, cellSize, cellSize);
+                // Draw the food using the preloaded image based on the selected fruit
+                var selectedFruit = $('#fruitSelect').val();
+                ctx.drawImage(foodImgs[selectedFruit], foodX, foodY, cellSize, cellSize);
 
                 $('#score').text('Score: ' + data.score);
             });
@@ -114,9 +107,15 @@ $(document).ready(function () {
         updateGame();
     }
 
-    // Call the loadNextFoodImage function when a button with the id 'startButton' is clicked
+    // Call the initializeGame function when the start button is clicked
     $('#startButton').on('click', function () {
-        // Load the first food image
-        loadNextFoodImage();
+        // Load the first food image based on the selected fruit
+        initializeGame();
+    });
+
+    // Call the initializeGame function when the dropdown value changes
+    $('#fruitSelect').on('change', function () {
+        // Load the first food image based on the selected fruit
+        initializeGame();
     });
 });
