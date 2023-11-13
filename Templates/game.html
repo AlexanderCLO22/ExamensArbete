@@ -1,3 +1,6 @@
+<!-- templates/index.html -->
+{% extends "base.html" %} {% block title %}Game{% endblock %} {% block content
+    %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game</title>
     <style>
-        canvas {
-            border: 1px solid #000;
-        }
+        /* Link your CSS file for styling */
+        @import url("{{ url_for('static', filename='styles.css') }}");
     </style>
 </head>
 <body>
+    <h1>Snake Game</h1>
+    <button id="startButton">Start Game</button>
+    <p id="score">Score: 0</p>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <button id="startButton" onclick="startGame()">Start Game</button>
-    <script src="static/gamescript.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ url_for('static', filename='gamescript.js') }}"></script>
 </body>
 </html>
+{% endblock %}

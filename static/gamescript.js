@@ -1,96 +1,102 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const segmentSize = 20;  // Adjust the segment size based on your game
 
-let snake;
-let food;
-let direction = '';
+$(document).ready(function() {
+    var gameInterval; // Variable to store the interval ID
 
-document.addEventListener('keydown', function(event) {
-    if (event.key.startsWith('Arrow')) {
-        const newDirection = event.key.replace('Arrow', '');
-        sendMoveRequest(newDirection);
+    // Function to initialize the game
+    function initializeGame() {
+        // Clear the existing interval if it exists
+        clearInterval(gameInterval);
+
+        // Initialize the game
+        $.get('/start', function(data) {
+            console.log(data.message);
+        });
+
+        var lastDirection = 'RIGHT';
+
+        // Function to update the game state on the canvas
+        function updateGame() {
+            $.get('/state', function(data) {
+                var canvas = document.getElementById('gameCanvas');
+                var ctx = canvas.getContext('2d');
+                var food = data.food;
+                var snake = data.snake;
+                var cellSize = 20; // The size of a single cell in the game, 1 food = cell 
+                var foodX = food[0] * cellSize;
+                var foodY = food[1] * cellSize;
+                
+
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the snake
+                ctx.fillStyle = 'green';
+                for (var i = 0; i < snake.length; i++) {
+                    var cell = snake[i];
+                    var snakeX = cell[0] * cellSize;
+                    var snakeY = cell[1] * cellSize;
+                
+                    ctx.fillRect(snakeX, snakeY, cellSize, cellSize);
+                }
+
+                // Draw the food
+                ctx.fillStyle = 'red';
+                ctx.fillRect(foodX, foodY, cellSize, cellSize);
+
+                $('#score').text('Score: ' + data.score);
+            });
+        }
+
+        // Function to handle user input and send it to the server
+        function handleInput(direction) {
+            $.ajax({
+                url: '/move',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ direction: direction }),
+                success: function(data) {
+                    console.log(data.message);
+                    updateGame();
+                }
+            });
+        }
+
+        $(document).keydown(function(e) {
+            switch(e.which) {
+                case 37: // left arrow
+                    lastDirection = 'LEFT';
+                    break;
+
+                case 38: // up arrow
+                    lastDirection = 'UP';
+                    break;
+
+                case 39: // right arrow
+                    lastDirection = 'RIGHT';
+                    break;
+
+                case 40: // down arrow
+                    lastDirection = 'DOWN';
+                    break;
+
+                default:
+                    return;
+            }
+            e.preventDefault();
+        });
+
+        // Set the interval and store the interval ID in the gameInterval variable
+        gameInterval = setInterval(function() {
+            // Get the last known direction and continue moving
+            handleInput(lastDirection);
+        }, 80); // Speed of the snake, lower is faster
+
+        updateGame();
     }
-});
 
-function initializeGame(gridSize) {
-    fetch('/start', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            gridSize: gridSize
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        snake = data.snake;
-        food = data.food;
-        direction = 'RIGHT';
-        gameLoop();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-function startGame() {
-    const gridSize = 20;  // Set your desired grid size
-    initializeGame(gridSize);
-}
-
-
-function sendMoveRequest(newDirection) {
-    fetch('/move', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            direction: newDirection
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        snake = data.snake;
-        food = data.food;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-function updateCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw the snake
-    ctx.fillStyle = 'green';
-    snake.forEach(segment => {
-        ctx.fillRect(segment.x * segmentSize, segment.y * segmentSize, segmentSize, segmentSize);
-    });
-
-    // Draw the food
-    ctx.fillStyle = 'red';
-    ctx.fillRect(food.x * segmentSize, food.y * segmentSize, segmentSize, segmentSize);
-}
-
-function gameLoop() {
-    updateCanvas();
-    requestAnimationFrame(gameLoop);
-}
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const gridSize = 20;  // Set your desired grid size
-    initializeGame(gridSize);
-});
-
-
-// Add an event listener to start a new game
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
+    // Call the initializeGame function when a button with the id 'startButton' is clicked
+    $('#startButton').on('click', function() {
         initializeGame();
-    }
+    });
 });
 
