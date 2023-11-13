@@ -2,32 +2,51 @@ import random
 
 class SnakeGame:
     def __init__(self):
-        self.grid_size = 1
-        self.snake = 1
-        self.food = 1
-        self.direction = "" 
-
-    def generate_food(self):
-        return random.randint(1, self.grid_size), random.randint(1, self.grid_size)
-
-    def move_snake(self, direction):
-        head_x, head_y = self.snake[0]
-        if direction == 'UP':
-            new_head = (head_x, head_y - 1)
-        elif direction == 'DOWN':
-            new_head = (head_x, head_y + 1)
-        elif direction == 'LEFT':
-            new_head = (head_x - 1, head_y)
-        elif direction == 'RIGHT':
-            new_head = (head_x + 1, head_y)
-        self.snake.insert(0, new_head)
-
-        if new_head == self.food:
-            self.food = self.generate_food()
-        else:
-            self.snake.pop()
-
-    def start_game(self, grid_size):
-        self.snake = [(random.randint(1, grid_size), random.randint(1, grid_size))]
+        # Initialize the game state
+        self.grid_size = 20
+        self.snake = [(0, 0)]
         self.food = self.generate_food()
         self.direction = 'RIGHT'
+        self.last_direction = self.direction
+        self.score = 0
+
+    def generate_food(self):
+        # Generate random food position that is not occupied by the snake
+        while True:
+            food = (random.randint(0, self.grid_size - 1), random.randint(0, self.grid_size - 1))
+            if food not in self.snake:
+                return food
+
+    def move(self):
+        # Move the snake based on the current direction
+        head = self.snake[0]
+        if self.direction == 'UP':
+            new_head = (head[0], (head[1] - 1))
+        elif self.direction == 'DOWN':
+            new_head = (head[0], (head[1] + 1))
+        elif self.direction == 'LEFT':
+            new_head = ((head[0] - 1), head[1])
+        elif self.direction == 'RIGHT':
+            new_head = ((head[0] + 1), head[1])
+
+        # Check for collisions with the snake itself
+        if new_head in self.snake or new_head[0] < 0 or new_head[0] >= self.grid_size or new_head[1] < 0 or new_head[1] >= self.grid_size:
+            # Handle game over logic (e.g., reset the game)
+            # For simplicity, we reset the game here
+            
+            self.__init__()
+            return
+
+        # Update the snake position
+        self.snake.insert(0, new_head)
+
+        # Check for collisions with food
+        if new_head == self.food:
+            self.score += 1
+            self.food = self.generate_food()
+        else:
+            # Remove the last segment of the snake if no food is eaten
+            self.snake.pop()
+    
+    def game_over(self):
+        self.__init__()

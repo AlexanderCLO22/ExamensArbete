@@ -5,33 +5,49 @@ from Application.Game import snake
 gameviews = Blueprint('gameviews', __name__)
 snake_game = snake.SnakeGame()
 
-
-@gameviews.route('/game', methods=['GET', 'POST'])
-@login_required
+@gameviews.route('/game')
 def game():
-    return render_template("game.html", user=current_user)
+    return render_template('game.html')
 
-@gameviews.route('/start', methods=['GET', 'POST'])
-@login_required
-def start():
-    
-    snake_game.start_game(20)
-    
-    initial_data = {
+@gameviews.route('/start')
+def start_game():
+    global snake_game
+    snake_game = snake.SnakeGame()
+    return jsonify({'message': 'Game started'})
+
+@gameviews.route('/state')
+def get_state():
+    global snake_game
+    return jsonify({
         'snake': snake_game.snake,
         'food': snake_game.food,
-    }
-    return jsonify(initial_data)    
+        'direction': snake_game.direction,
+        'score': snake_game.score
+    })
 
-# @gameviews.route('/move', methods=['GET', 'POST'])
-# def move():
-#     global direction
-#     data = request.get_json()
-#     direction = data.get('direction', '')
-#     snake_game.move_snake(direction)
+@gameviews.route('/move', methods=['POST'])
+def move():
+    global snake_game
+    snake_game.last_direction = snake_game.direction
+    data = request.json
+    direction = data.get('direction')
+    
+    if direction == 'UP' and snake_game.last_direction == 'DOWN':
+        direction = 'DOWN'
+    elif direction == 'DOWN' and snake_game.last_direction == 'UP':
+        direction = 'UP'
+    elif direction == 'LEFT' and snake_game.last_direction == 'RIGHT':
+        direction = 'RIGHT'
+    elif direction == 'RIGHT' and snake_game.last_direction == 'LEFT':
+        direction = 'LEFT'
 
-#     updated_data = {
-#         'snake': snake_game.snake,
-#         'food': snake_game.food
-#     }
-#     return jsonify(updated_data)
+    # Update the game state based on user input
+    snake_game.direction = direction
+    snake_game.move()
+
+    return jsonify({'message': 'Moved successfully'})
+
+@gameviews.route('/score')
+def get_score():
+    global snake_game
+    return jsonify({'score': snake_game.score})
