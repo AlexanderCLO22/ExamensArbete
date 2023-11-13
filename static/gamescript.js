@@ -1,6 +1,30 @@
-
-$(document).ready(function() {
+$(document).ready(function () {
     var gameInterval; // Variable to store the interval ID
+    var snakeImg = new Image();
+    var foodImages = [
+        '/static/images/apple.webp',
+        '/static/images/banana.webp',
+        '/static/images/cherry.webp'
+    ];
+
+    // Preload snake image
+    snakeImg.src = '/static/images/snakehead2.png';
+
+    // Preload food images
+    var foodImgs = [];
+    for (var i = 0; i < foodImages.length; i++) {
+        var img = new Image();
+        img.src = foodImages[i];
+        foodImgs.push(img);
+    }
+
+    var currentFoodImageIndex = 0; // Index to keep track of the current food image
+
+    // Function to load the next food image
+    function loadNextFoodImage() {
+        currentFoodImageIndex = (currentFoodImageIndex + 1) % foodImgs.length;
+        initializeGame(); // Start the game after loading the next food image
+    }
 
     // Function to initialize the game
     function initializeGame() {
@@ -8,7 +32,7 @@ $(document).ready(function() {
         clearInterval(gameInterval);
 
         // Initialize the game
-        $.get('/start', function(data) {
+        $.get('/start', function (data) {
             console.log(data.message);
         });
 
@@ -16,7 +40,7 @@ $(document).ready(function() {
 
         // Function to update the game state on the canvas
         function updateGame() {
-            $.get('/state', function(data) {
+            $.get('/state', function (data) {
                 var canvas = document.getElementById('gameCanvas');
                 var ctx = canvas.getContext('2d');
                 var food = data.food;
@@ -24,24 +48,20 @@ $(document).ready(function() {
                 var cellSize = 20; // The size of a single cell in the game, 1 food = cell 
                 var foodX = food[0] * cellSize;
                 var foodY = food[1] * cellSize;
-                
 
                 // Clear the canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 // Draw the snake
-                ctx.fillStyle = 'green';
                 for (var i = 0; i < snake.length; i++) {
                     var cell = snake[i];
                     var snakeX = cell[0] * cellSize;
                     var snakeY = cell[1] * cellSize;
-                
-                    ctx.fillRect(snakeX, snakeY, cellSize, cellSize);
+                    ctx.drawImage(snakeImg, snakeX, snakeY, cellSize, cellSize);
                 }
 
-                // Draw the food
-                ctx.fillStyle = 'red';
-                ctx.fillRect(foodX, foodY, cellSize, cellSize);
+                // Draw the food using the preloaded image
+                ctx.drawImage(foodImgs[currentFoodImageIndex], foodX, foodY, cellSize, cellSize);
 
                 $('#score').text('Score: ' + data.score);
             });
@@ -54,15 +74,15 @@ $(document).ready(function() {
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ direction: direction }),
-                success: function(data) {
+                success: function (data) {
                     console.log(data.message);
                     updateGame();
                 }
             });
         }
 
-        $(document).keydown(function(e) {
-            switch(e.which) {
+        $(document).keydown(function (e) {
+            switch (e.which) {
                 case 37: // left arrow
                     lastDirection = 'LEFT';
                     break;
@@ -86,7 +106,7 @@ $(document).ready(function() {
         });
 
         // Set the interval and store the interval ID in the gameInterval variable
-        gameInterval = setInterval(function() {
+        gameInterval = setInterval(function () {
             // Get the last known direction and continue moving
             handleInput(lastDirection);
         }, 80); // Speed of the snake, lower is faster
@@ -94,9 +114,9 @@ $(document).ready(function() {
         updateGame();
     }
 
-    // Call the initializeGame function when a button with the id 'startButton' is clicked
-    $('#startButton').on('click', function() {
-        initializeGame();
+    // Call the loadNextFoodImage function when a button with the id 'startButton' is clicked
+    $('#startButton').on('click', function () {
+        // Load the first food image
+        loadNextFoodImage();
     });
 });
-
