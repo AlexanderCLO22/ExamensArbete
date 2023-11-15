@@ -29,6 +29,7 @@ $(document).ready(function () {
         });
 
         var lastDirection = 'RIGHT';
+        var gameIsOver = false;
 
         // Function to update the game state on the canvas
         function updateGame() {
@@ -60,8 +61,18 @@ $(document).ready(function () {
             });
         }
 
+        function GameOver() {
+            // Clear the existing interval if it exists
+            clearInterval(gameInterval);
+
+            window.location.href = "/game_over";
+        }
         // Function to handle user input and send it to the server
         function handleInput(direction) {
+
+            if (gameIsOver) {
+                return;
+            }
             $.ajax({
                 url: '/move',
                 type: 'POST',
@@ -70,6 +81,11 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log(data.message);
                     updateGame();
+
+                    if (data.gameOver) {
+                        gameIsOver = true;
+                        GameOver();
+                    }
                 }
             });
         }
@@ -106,7 +122,6 @@ $(document).ready(function () {
 
         updateGame();
     }
-
     // Call the initializeGame function when the start button is clicked
     $('#startButton').on('click', function () {
         // Load the first food image based on the selected fruit
@@ -118,4 +133,5 @@ $(document).ready(function () {
         // Load the first food image based on the selected fruit
         initializeGame();
     });
+
 });

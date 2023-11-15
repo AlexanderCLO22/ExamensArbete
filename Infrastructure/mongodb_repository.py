@@ -19,3 +19,6 @@ class MongoDBRepository:
         user_data = {'username': username, 'password': password}
         self.collection_users.insert_one(user_data)
 
+    def create_highscore(self, user, score):
+        highscore_data = {'user': user, 'score': score}
+        self.collection_highscores.insert_one(highscore_data)

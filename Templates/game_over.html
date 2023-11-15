@@ -1,0 +1,25 @@
+<!-- templates/game_over.html -->
+{% extends "base.html" %} 
+{% block title %}Game Over{% endblock %} 
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Over</title>
+    <style>
+        /* Link your CSS file for styling */
+        @import url("{{ url_for('static', filename='styles.css') }}");
+    </style>
+</head>
+<body>
+    <h1>Game Over</h1>
+    <p id="score">Your Score: {{ score }}</p>
+    <a href="/submit_score"><button>Submit Score</button></a>
+    <a href="/game"><button>Play Again</button></a>
+</body>
+</html>
+{% endblock %}
+
+
