@@ -7,7 +7,9 @@ gameviews = Blueprint('gameviews', __name__)
 
 @gameviews.route('/game')
 def game():
-    return render_template('game.html')
+    global_highscores = current_app.mongodb_repository.get_all_highscores()
+    personal_highscores = current_app.mongodb_repository.get_personal_highscores(current_user.id)
+    return render_template('game.html', global_highscores=global_highscores, personal_highscores=personal_highscores)
 
 @gameviews.route('/start')
 def start_game():
@@ -51,7 +53,9 @@ def move():
 
 @gameviews.route('/game_over', methods=['GET'])
 def game_over():
-    return render_template('game_over.html', score=snake_game.score)
+    global_highscores = current_app.mongodb_repository.get_all_highscores()
+    personal_highscores = current_app.mongodb_repository.get_personal_highscores(current_user.id)
+    return render_template('game_over.html', global_highscores=global_highscores, personal_highscores=personal_highscores, score=snake_game.score)
 
 
 @gameviews.route('submit_score', methods=['GET'])

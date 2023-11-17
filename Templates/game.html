@@ -1,29 +1,41 @@
-<!-- templates/index.html -->
-{% extends "base.html" %} {% block title %}Game{% endblock %} {% block content
-    %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
-    <style>
-        /* Link your CSS file for styling */
-        @import url("{{ url_for('static', filename='styles.css') }}");
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Game{% endblock %}
+
+{% block content %}
     <h1>Snake Game</h1>
-    <select id="fruitSelect">
-        <option value="apple">Apple</option>
-        <option value="banana">Banana</option>
-        <option value="cherry">Cherry</option>
-    </select>
-    <button id="startButton">Start Game</button>
-    <p id="score">Score: 0</p>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Left side highscore list -->
+            <h2>Your Highscores</h2>
+            <ol class="list-unstyled highscore-list">
+                {% for highscores in personal_highscores[:5] %}
+                <li>{{ loop.index }}. {{ highscores.user }} - {{ highscores.score }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <!-- Game canvas and controls -->
+            <select id="fruitSelect">
+                <option value="apple">Apple</option>
+                <option value="banana">Banana</option>
+                <option value="cherry">Cherry</option>
+            </select>
+            <button id="startButton">Start Game</button>
+            <p id="score">Score: 0</p>
+            <canvas id="gameCanvas" width="500" height="500"></canvas>
+        </div>
+        <div class="col-md-3">
+            <!-- Right side highscore list -->
+            <h2>Top Highscores</h2>
+            <ol class="list-unstyled highscore-list">
+                {% for highscores in global_highscores[:10] %}
+                <li>{{ loop.index }}. {{ highscores.user }} - {{ highscores.score }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="{{ url_for('static', filename='gamescript.js') }}"></script>
-</body>
-</html>
 {% endblock %}

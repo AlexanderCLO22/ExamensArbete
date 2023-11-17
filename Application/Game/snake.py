@@ -6,7 +6,7 @@ from flask_login import current_user
 class SnakeGame:
     def __init__(self):
         # Initialize the game state
-        self.grid_size = 20
+        self.grid_size = 25
         self.snake = [(0, 0)]
         self.food = self.generate_food()
         self.direction = 'RIGHT'

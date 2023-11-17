@@ -70,9 +70,6 @@ $(document).ready(function () {
         // Function to handle user input and send it to the server
         function handleInput(direction) {
 
-            if (gameIsOver) {
-                return;
-            }
             $.ajax({
                 url: '/move',
                 type: 'POST',
@@ -128,6 +125,13 @@ $(document).ready(function () {
         initializeGame();
     });
 
+    // Call the initializeGame function when the enter key is pressed
+    document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            
+            initializeGame();
+        }
+    });
     // Call the initializeGame function when the dropdown value changes
     $('#fruitSelect').on('change', function () {
         // Load the first food image based on the selected fruit
