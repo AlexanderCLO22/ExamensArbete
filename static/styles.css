@@ -1,4 +1,4 @@
-body {
+body, button, a {
     font-family: Arial, sans-serif;
     text-align: center;
 }
@@ -8,27 +8,31 @@ h1 {
 }
 
 #gameCanvas {
-    border: 2px solid #333; /* Add a border around the game canvas */
+    border: 4px solid #000000; /* Add a border around the game canvas */
+    background-color: #fbfcfa;
 }
 
 #score {
     font-size: 25px;
-    color: #10920c;
+    color: #000000;
 }
 .highscore-list {
     font-size: 18px; /* Set the font size for the highscore lists */
-    border: 1px solid #000000; /* Add a border around the highscore lists */
+    border: 2px solid #000000; /* Add a border around the highscore lists */
     padding: 10px; /* Add some padding for better spacing */
     border-radius: 5px; /* Optional: Add border radius for rounded corners */
     margin: 10px; /* Add some margin for better spacing */
     max-width: 300; /* Set a maximum width for the highscore lists */
     text-align: center;
+    color :rgb(0, 0, 0);
+    background-color: #ffffff;
 }
 /* Add these styles to your styles.css file */
 button {
     display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
+    margin: 5px;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -60,7 +64,71 @@ button:hover {
     font-weight: bold; /* Bold font for emphasis */
     color: #CD7F32; /* Text color for the first list item */
 }
+.navbar-nav a {
+    color: rgb(0, 0, 0);
+    padding: 10px;
+    text-decoration: none;
+}
+
+.navbar-nav a:hover {
+    color: #d4cdcd; /* Change the color on hover */
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40; /* Set your desired background color */
+    color: #ffffff; /* Set your desired text color */
+    padding: 15px 0;
+}
+.custom-navbar {
+    background-color: #0de6b7; /* Set your desired background color */;
+    padding: 20px;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+}
+.navbar-text {
+    font-size: 25px; /* Adjust the font size as needed */
+}
+.navbar-brand-title {
+    font-size: 40px; /* Adjust the font size as needed */
+    background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+    -webkit-background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+.content-container {
+    position: relative;
+    padding: 20px; /* Adjust the padding as needed */
+    color: #ffffff; /* Adjust the text color for better visibility */
+    flex: 1; /* Ensure the container takes up remaining space */
+    background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
+    background-size: 200% 100%;
+    animation: rainbowAnimation 5s linear infinite;
+    
+}
+
+@keyframes rainbowAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
 
 
-
+/* Adjust padding for the content within the container */
+.content-padding {
+    padding: 20px; /* Adjust the padding as needed */
+}
 

@@ -4,9 +4,12 @@ from Application.Game import snake
 
 gameviews = Blueprint('gameviews', __name__)
 
-
+@login_required
 @gameviews.route('/game')
 def game():
+    if current_user.is_anonymous:
+        return redirect(url_for('homeviews.home'))
+    
     global_highscores = current_app.mongodb_repository.get_all_highscores()
     personal_highscores = current_app.mongodb_repository.get_personal_highscores(current_user.id)
     return render_template('game.html', global_highscores=global_highscores, personal_highscores=personal_highscores)
@@ -53,6 +56,9 @@ def move():
 
 @gameviews.route('/game_over', methods=['GET'])
 def game_over():
+    if current_user.is_anonymous:
+        return redirect(url_for('homeviews.home'))
+
     global_highscores = current_app.mongodb_repository.get_all_highscores()
     personal_highscores = current_app.mongodb_repository.get_personal_highscores(current_user.id)
     return render_template('game_over.html', global_highscores=global_highscores, personal_highscores=personal_highscores, score=snake_game.score)

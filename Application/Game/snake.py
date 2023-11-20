@@ -1,7 +1,4 @@
 import random
-from flask import current_app
-from flask import redirect, render_template, url_for
-from flask_login import current_user
 
 class SnakeGame:
     def __init__(self):
