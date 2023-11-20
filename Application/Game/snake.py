@@ -1,14 +1,18 @@
 import random
+from flask import current_app
+from flask import redirect, render_template, url_for
+from flask_login import current_user
 
 class SnakeGame:
     def __init__(self):
         # Initialize the game state
-        self.grid_size = 20
+        self.grid_size = 25
         self.snake = [(0, 0)]
         self.food = self.generate_food()
         self.direction = 'RIGHT'
         self.last_direction = self.direction
         self.score = 0
+        self.gameOver = False
 
     def generate_food(self):
         # Generate random food position that is not occupied by the snake
@@ -34,7 +38,7 @@ class SnakeGame:
             # Handle game over logic (e.g., reset the game)
             # For simplicity, we reset the game here
             
-            self.__init__()
+            self.gameOver = True
             return
 
         # Update the snake position
@@ -44,9 +48,8 @@ class SnakeGame:
         if new_head == self.food:
             self.score += 1
             self.food = self.generate_food()
+            
         else:
             # Remove the last segment of the snake if no food is eaten
             self.snake.pop()
-    
-    def game_over(self):
-        self.__init__()
+ 

@@ -44,6 +44,9 @@ def signup():
         elif len(username) < 3:
             flash("Username must be at least 3 characters", category='error')
             return redirect(url_for('authviews.signup'))
+        elif len(password1) < 5:
+            flash("Password must be at least 5 characters", category='error')
+            return redirect(url_for('authviews.signup'))
         elif password1 != password2:
             flash("Passwords don't match")
             return redirect(url_for('authviews.signup'))
