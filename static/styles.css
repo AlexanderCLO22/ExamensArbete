@@ -109,23 +109,12 @@ main {
 .content-container {
     position: relative;
     padding: 20px; /* Adjust the padding as needed */
-    color: #ffffff; /* Adjust the text color for better visibility */
+    color: #000000; /* Adjust the text color for better visibility */
     flex: 1; /* Ensure the container takes up remaining space */
-    background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
-    background-size: 200% 100%;
-    animation: rainbowAnimation 5s linear infinite;
+    background-color: #ffffff; /* Set your desired background color */
+    
     
 }
-
-@keyframes rainbowAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 100% 50%;
-    }
-}
-
 
 /* Adjust padding for the content within the container */
 .content-padding {

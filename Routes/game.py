@@ -22,7 +22,6 @@ def start_game():
 
 @gameviews.route('/state')
 def get_state():
-    global snake_game
     return jsonify({
         'snake': snake_game.snake,
         'food': snake_game.food,
