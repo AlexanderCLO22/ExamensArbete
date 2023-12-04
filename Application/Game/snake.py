@@ -18,35 +18,34 @@ class SnakeGame:
             if food not in self.snake:
                 return food
 
-    def move(self):
+    def update_game_state(self, game_state):
         # Move the snake based on the current direction
-        head = self.snake[0]
-        if self.direction == 'UP':
+        head = game_state['snake'][0]
+        if game_state['direction'] == 'UP':
             new_head = (head[0], (head[1] - 1))
-        elif self.direction == 'DOWN':
+        elif game_state['direction'] == 'DOWN':
             new_head = (head[0], (head[1] + 1))
-        elif self.direction == 'LEFT':
+        elif game_state['direction'] == 'LEFT':
             new_head = ((head[0] - 1), head[1])
-        elif self.direction == 'RIGHT':
+        elif game_state['direction'] == 'RIGHT':
             new_head = ((head[0] + 1), head[1])
 
-        # Check for collisions with the snake itself
-        if new_head in self.snake or new_head[0] < 0 or new_head[0] >= self.grid_size or new_head[1] < 0 or new_head[1] >= self.grid_size:
-            # Handle game over logic (e.g., reset the game)
-            # For simplicity, we reset the game here
-            
-            self.gameOver = True
+        # Check for collisions with the snake itself and the walls
+
+        
+        if new_head in game_state['snake'][1:] or new_head[0] < 0 or new_head[0] >= self.grid_size or new_head[1] < 0 or new_head[1] >= self.grid_size:
+            game_state['gameOver'] = True
             return
 
         # Update the snake position
-        self.snake.insert(0, new_head)
+        game_state['snake'].insert(0, new_head)
 
         # Check for collisions with food
-        if new_head == self.food:
-            self.score += 1
-            self.food = self.generate_food()
-            
+        food_x, food_y = game_state['food']
+        if new_head[0] == food_x and new_head[1] == food_y:
+            game_state['score'] += 1
+            game_state['food'] = self.generate_food()
         else:
             # Remove the last segment of the snake if no food is eaten
-            self.snake.pop()
+            game_state['snake'].pop()
  

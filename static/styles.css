@@ -109,11 +109,10 @@ main {
 .content-container {
     position: relative;
     padding: 20px; /* Adjust the padding as needed */
-    color: #ffffff; /* Adjust the text color for better visibility */
+    color: #000000; /* Adjust the text color for better visibility */
     flex: 1; /* Ensure the container takes up remaining space */
-    background: linear-gradient(to right, violet, indigo, blue, green, yellow, orange, red);
-    background-size: 200% 100%;
-    animation: rainbowAnimation 5s linear infinite;
+    background-color: #ffffff;
+    
     
 }
 
