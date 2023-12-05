@@ -44,7 +44,6 @@ def move():
     elif direction == 'RIGHT' and snake_game.last_direction == 'LEFT':
         direction = 'LEFT'
 
-    # Update the game state based on user input
     snake_game.direction = direction
     snake_game.move()
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect, flash, jsonify
-from flask import current_app
+
 
 homeviews = Blueprint('homeviews', __name__)
 
